@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DUAN LAB</title>
+  <!-- JetBrains Mono from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #050505;
+      --pink: #ef4cac;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      /* 全屏无滚动 */
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: "JetBrains Mono", monospace;
+      position: relative;
+    }
+
+    /*
+      底层固定伪元素：四周边缘粉色径向渐变发光
+      用 4 个 radial-gradient 分别贴在四个角/边，
+      再叠加一层 box-shadow 内发光，配合呼吸动画。
+    */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top left, rgba(239, 76, 172, 0.35), transparent 35%),
+        radial-gradient(circle at top right, rgba(239, 76, 172, 0.35), transparent 35%),
+        radial-gradient(circle at bottom left, rgba(239, 76, 172, 0.35), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(239, 76, 172, 0.35), transparent 35%);
+      /* 内阴影强化边缘发光带 */
+      box-shadow: inset 0 0 180px 40px rgba(239, 76, 172, 0.15);
+      animation: breathe 6s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%,
+      100% {
+        opacity: 0.45;
+        filter: blur(2px);
+      }
+      50% {
+        opacity: 1;
+        filter: blur(0);
+      }
+    }
+
+    /* 顶部导航栏：绝对定位 */
+    .navbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 48px;
+    }
+
+    .logo {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: color 0.4s ease, text-shadow 0.4s ease;
+    }
+
+    .logo:hover {
+      color: var(--pink);
+      text-shadow: 0 0 12px rgba(239, 76, 172, 0.9);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      /* 默认半透明白色 */
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      /* 透明度 + 颜色 + 发光阴影渐变动画 */
+      transition: color 0.4s ease, opacity 0.4s ease, text-shadow 0.4s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--pink);
+      opacity: 1;
+      text-shadow:
+        0 0 8px rgba(239, 76, 172, 0.8),
+        0 0 20px rgba(239, 76, 172, 0.5);
+    }
+
+    /* 居中的占位内容（可替换） */
+    .stage {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stage h1 {
+      color: rgba(255, 255, 255, 0.06);
+      font-size: clamp(48px, 12vw, 160px);
+      font-weight: 500;
+      letter-spacing: 6px;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#" class="logo">DUAN LAB</a>
+    <ul class="nav-links">
+      <li><a href="#work">WORK</a></li>
+      <li><a href="#about">ABOUT</a></li>
+      <li><a href="#experience">EXPERIENCE</a></li>
+      <li><a href="#contact">CONTACT</a></li>
+    </ul>
+  </nav>
+
+  <main class="stage">
+    <h1>DUAN LAB</h1>
+  </main>
+</body>
+</html>

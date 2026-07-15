@@ -1,46 +1,43 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DUAN LAB</title>
-  <!-- JetBrains Mono from Google Fonts -->
+  <title>DUAN LAB — Notes</title>
+
+  <!-- JetBrains Mono 等宽字体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
+
+  <!-- marked.js 用于把 markdown 渲染成 HTML 预览 -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+
   <style>
+    /* ========== 全局变量 ========== */
     :root {
       --bg: #050505;
       --pink: #ef4cac;
+      --panel-bg: rgba(12, 12, 16, 0.6);
+      --border: rgba(239, 76, 172, 0.28);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html,
-    body {
-      height: 100%;
-      /* 全屏无滚动 */
-      overflow: hidden;
-    }
+    /* 全屏无滚动 */
+    html, body { width: 100%; height: 100%; overflow: hidden; }
 
     body {
-      background-color: var(--bg);
-      font-family: "JetBrains Mono", monospace;
       position: relative;
+      background: var(--bg);
+      font-family: "JetBrains Mono", monospace;
+      color: #fff;
     }
 
-    /*
-      底层固定伪元素：四周边缘粉色径向渐变发光
-      用 4 个 radial-gradient 分别贴在四个角/边，
-      再叠加一层 box-shadow 内发光，配合呼吸动画。
-    */
+    /* ========== 底层四周粉色径向渐变呼吸灯 ========== */
     body::before {
       content: "";
       position: fixed;
@@ -48,99 +45,277 @@
       z-index: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at top left, rgba(239, 76, 172, 0.35), transparent 35%),
-        radial-gradient(circle at top right, rgba(239, 76, 172, 0.35), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(239, 76, 172, 0.35), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(239, 76, 172, 0.35), transparent 35%);
-      /* 内阴影强化边缘发光带 */
-      box-shadow: inset 0 0 180px 40px rgba(239, 76, 172, 0.15);
+        radial-gradient(circle at top left, rgba(239,76,172,.42), transparent 34%),
+        radial-gradient(circle at top right, rgba(239,76,172,.34), transparent 36%),
+        radial-gradient(circle at bottom left, rgba(239,76,172,.32), transparent 38%),
+        radial-gradient(circle at bottom right, rgba(239,76,172,.46), transparent 34%);
+      box-shadow:
+        inset 0 0 160px 36px rgba(239,76,172,.14),
+        inset 0 0 280px 70px rgba(239,76,172,.06);
       animation: breathe 6s ease-in-out infinite;
     }
 
     @keyframes breathe {
-      0%,
-      100% {
-        opacity: 0.45;
-        filter: blur(2px);
-      }
-      50% {
-        opacity: 1;
-        filter: blur(0);
-      }
+      0%, 100% { opacity: .42; filter: blur(2px); }
+      50%      { opacity: 1;   filter: blur(0); }
     }
 
-    /* 顶部导航栏：绝对定位 */
+    /* ========== 顶部导航栏 ========== */
     .navbar {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 10;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 28px 48px;
+      padding: 26px 48px;
     }
 
     .logo {
-      color: rgba(255, 255, 255, 0.85);
-      font-weight: 500;
-      font-size: 16px;
-      letter-spacing: 1px;
+      color: rgba(255,255,255,.78);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
       text-decoration: none;
-      transition: color 0.4s ease, text-shadow 0.4s ease;
+      transition: color .35s ease, opacity .35s ease, text-shadow .35s ease;
     }
-
     .logo:hover {
       color: var(--pink);
-      text-shadow: 0 0 12px rgba(239, 76, 172, 0.9);
+      text-shadow: 0 0 8px rgba(239,76,172,.85), 0 0 22px rgba(239,76,172,.55);
     }
 
-    .nav-links {
-      display: flex;
-      gap: 40px;
-      list-style: none;
-    }
-
+    .nav-links { display: flex; gap: 38px; list-style: none; }
     .nav-links a {
-      /* 默认半透明白色 */
-      color: rgba(255, 255, 255, 0.5);
-      text-decoration: none;
+      color: rgba(255,255,255,.48);
       font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 2px;
-      /* 透明度 + 颜色 + 发光阴影渐变动画 */
-      transition: color 0.4s ease, opacity 0.4s ease, text-shadow 0.4s ease;
+      font-weight: 500;
+      letter-spacing: 1.8px;
+      text-decoration: none;
+      transition: color .35s ease, opacity .35s ease, text-shadow .35s ease;
     }
-
     .nav-links a:hover {
       color: var(--pink);
       opacity: 1;
-      text-shadow:
-        0 0 8px rgba(239, 76, 172, 0.8),
-        0 0 20px rgba(239, 76, 172, 0.5);
+      text-shadow: 0 0 8px rgba(239,76,172,.85), 0 0 20px rgba(239,76,172,.5);
     }
 
-    /* 居中的占位内容（可替换） */
+    /* ========== 主体舞台：左列表 + 右预览 ========== */
     .stage {
       position: relative;
       z-index: 1;
+      width: 100%;
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 100px 48px 40px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 26px;
     }
 
-    .stage h1 {
-      color: rgba(255, 255, 255, 0.06);
-      font-size: clamp(48px, 12vw, 160px);
-      font-weight: 500;
-      letter-spacing: 6px;
-      user-select: none;
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.05), transparent 45%),
+        var(--panel-bg);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 0 50px rgba(239,76,172,.12), 0 20px 70px rgba(0,0,0,.55);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 20px 22px;
+      border-bottom: 1px solid rgba(239,76,172,.16);
+      flex-shrink: 0;
+    }
+    .eyebrow {
+      color: var(--pink);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      text-shadow: 0 0 14px rgba(239,76,172,.5);
+    }
+    .panel-title {
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      color: rgba(255,255,255,.9);
+    }
+    .panel-sub {
+      margin-top: 6px;
+      font-size: 11px;
+      color: rgba(255,255,255,.4);
+    }
+
+    /* ========== 文件列表 ========== */
+    .file-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .file-item:hover {
+      background: rgba(239,76,172,.06);
+      border-color: rgba(239,76,172,.3);
+    }
+    .file-item.active {
+      background: rgba(239,76,172,.1);
+      border-color: var(--pink);
+      box-shadow: 0 0 20px rgba(239,76,172,.18);
+    }
+    .file-ext {
+      flex-shrink: 0;
+      width: 38px; height: 38px;
+      display: grid; place-items: center;
+      border-radius: 9px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      color: var(--pink);
+      background: rgba(239,76,172,.1);
+      text-transform: uppercase;
+    }
+    .file-meta { min-width: 0; }
+    .file-name {
+      font-size: 13px;
+      color: rgba(255,255,255,.82);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .file-size {
+      margin-top: 3px;
+      font-size: 11px;
+      color: rgba(255,255,255,.38);
+    }
+
+    /* ========== 预览区 ========== */
+    .preview-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .preview-actions { display: flex; gap: 10px; }
+    .btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(239,76,172,.06);
+      color: rgba(255,255,255,.8);
+      font-family: inherit;
+      font-size: 12px;
+      letter-spacing: .5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color .25s ease, border-color .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+    .btn:hover {
+      color: var(--pink);
+      border-color: var(--pink);
+      background: rgba(239,76,172,.12);
+      box-shadow: 0 0 18px rgba(239,76,172,.25);
+    }
+
+    .preview-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 26px 30px;
+      font-size: 14px;
+      line-height: 1.85;
+      color: rgba(255,255,255,.8);
+    }
+    /* markdown 渲染样式 */
+    .preview-body h1, .preview-body h2, .preview-body h3 {
+      color: #fff;
+      margin: 22px 0 12px;
+      line-height: 1.35;
+    }
+    .preview-body h1 { font-size: 24px; }
+    .preview-body h2 { font-size: 20px; }
+    .preview-body h3 { font-size: 16px; }
+    .preview-body p { margin: 12px 0; }
+    .preview-body a { color: var(--pink); }
+    .preview-body ul, .preview-body ol { margin: 12px 0 12px 22px; }
+    .preview-body code {
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: rgba(239,76,172,.12);
+      color: #ffb3df;
+      font-size: 13px;
+    }
+    .preview-body pre {
+      margin: 14px 0;
+      padding: 16px;
+      border-radius: 10px;
+      background: rgba(0,0,0,.4);
+      border: 1px solid rgba(239,76,172,.16);
+      overflow-x: auto;
+    }
+    .preview-body pre code { background: none; padding: 0; color: rgba(255,255,255,.85); }
+    .preview-body blockquote {
+      margin: 14px 0;
+      padding: 6px 16px;
+      border-left: 3px solid var(--pink);
+      color: rgba(255,255,255,.6);
+    }
+    /* txt 纯文本预览 */
+    .preview-body.plain {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 13px;
+    }
+
+    /* 空状态 / 提示文字 */
+    .hint {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      padding: 30px;
+      text-align: center;
+      color: rgba(255,255,255,.4);
+      font-size: 13px;
+      line-height: 1.9;
+    }
+    .hint .pink { color: var(--pink); }
+
+    /* 滚动条 */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(239,76,172,.35);
+      border-radius: 999px;
+    }
+
+    /* 响应式：窄屏改为上下布局 */
+    @media (max-width: 820px) {
+      html, body { overflow: auto; }
+      .stage {
+        height: auto;
+        min-height: 100%;
+        grid-template-columns: 1fr;
+        padding: 92px 20px 30px;
+      }
+      .navbar { padding: 20px; }
+      .nav-links { gap: 18px; }
+      .file-list { max-height: 260px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- ========== 顶部导航栏 ========== -->
   <nav class="navbar">
     <a href="#" class="logo">DUAN LAB</a>
     <ul class="nav-links">
@@ -151,8 +326,172 @@
     </ul>
   </nav>
 
+  <!-- ========== 主体 ========== -->
   <main class="stage">
-    <h1>DUAN LAB</h1>
+
+    <!-- 左侧：笔记列表 -->
+    <section class="panel">
+      <div class="panel-head">
+        <div class="eyebrow">Notes</div>
+        <div class="panel-title">笔记库</div>
+        <div class="panel-sub" id="listSub">正在加载…</div>
+      </div>
+      <div class="file-list" id="fileList"></div>
+    </section>
+
+    <!-- 右侧：在线预览 -->
+    <section class="panel">
+      <div class="panel-head preview-head">
+        <div>
+          <div class="eyebrow">Preview</div>
+          <div class="panel-title" id="previewTitle">在线预览</div>
+        </div>
+        <div class="preview-actions" id="previewActions" style="display:none;">
+          <a class="btn" id="downloadBtn" download>下载</a>
+          <a class="btn" id="rawBtn" target="_blank" rel="noopener">原文</a>
+        </div>
+      </div>
+      <div class="preview-body" id="previewBody">
+        <div class="hint">
+          从左侧选择一篇笔记<br />即可在此<span class="pink"> 在线预览 </span>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <script>
+    /* =======================================================
+       配置项：改成你自己的 GitHub 信息即可
+       ======================================================= */
+    const CONFIG = {
+      owner:  "your-github-username", // ← 你的 GitHub 用户名
+      repo:   "your-repo-name",       // ← 仓库名称
+      branch: "main",                 // ← 分支名（一般是 main 或 master）
+      dir:    "notes"                 // ← 存放笔记的文件夹
+    };
+
+    /* 只展示这些后缀的文件 */
+    const ALLOWED_EXT = ["md", "txt"];
+
+    const fileListEl   = document.getElementById("fileList");
+    const listSubEl    = document.getElementById("listSub");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewBody  = document.getElementById("previewBody");
+    const previewActions = document.getElementById("previewActions");
+    const downloadBtn  = document.getElementById("downloadBtn");
+    const rawBtn       = document.getElementById("rawBtn");
+
+    /* 取文件后缀 */
+    function getExt(name) {
+      return name.split(".").pop().toLowerCase();
+    }
+
+    /* 格式化文件大小 */
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + " B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+      return (bytes / 1024 / 1024).toFixed(2) + " MB";
+    }
+
+    /* =======================================================
+       通过 GitHub REST API 读取 notes 文件夹内容
+       接口: https://api.github.com/repos/{owner}/{repo}/contents/{dir}
+       ======================================================= */
+    async function loadNotes() {
+      const api = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.dir}?ref=${CONFIG.branch}`;
+
+      try {
+        const res = await fetch(api, {
+          headers: { "Accept": "application/vnd.github.v3+json" }
+        });
+
+        if (!res.ok) {
+          // 404 一般是文件夹不存在或配置错误
+          throw new Error("HTTP " + res.status);
+        }
+
+        const data = await res.json();
+
+        // 过滤出允许的笔记文件
+        const notes = data
+          .filter(item => item.type === "file" && ALLOWED_EXT.includes(getExt(item.name)))
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        if (notes.length === 0) {
+          listSubEl.textContent = "暂无笔记文件";
+          fileListEl.innerHTML =
+            '<div class="hint">notes 文件夹下<br />还没有 md/txt 笔记</div>';
+          return;
+        }
+
+        listSubEl.textContent = `共 ${notes.length} 篇`;
+        renderList(notes);
+
+      } catch (err) {
+        listSubEl.textContent = "加载失败";
+        fileListEl.innerHTML =
+          `<div class="hint">读取失败：<span class="pink">${err.message}</span><br />
+           请检查 index.html 顶部 CONFIG<br />（用户名 / 仓库名 / 分支）是否正确</div>`;
+      }
+    }
+
+    /* 渲染左侧列表 */
+    function renderList(notes) {
+      fileListEl.innerHTML = "";
+      notes.forEach(note => {
+        const item = document.createElement("div");
+        item.className = "file-item";
+        item.innerHTML = `
+          <div class="file-ext">${getExt(note.name)}</div>
+          <div class="file-meta">
+            <div class="file-name" title="${note.name}">${note.name}</div>
+            <div class="file-size">${formatSize(note.size)}</div>
+          </div>
+        `;
+        // 点击加载预览。download_url 是原始文件的直链
+        item.addEventListener("click", () => {
+          document.querySelectorAll(".file-item").forEach(el => el.classList.remove("active"));
+          item.classList.add("active");
+          openNote(note);
+        });
+        fileListEl.appendChild(item);
+      });
+    }
+
+    /* 打开并预览一篇笔记 */
+    async function openNote(note) {
+      previewTitle.textContent = note.name;
+      previewBody.className = "preview-body";
+      previewBody.innerHTML = '<div class="hint">加载中…</div>';
+
+      // 设置下载 / 原文按钮链接
+      previewActions.style.display = "flex";
+      downloadBtn.href = note.download_url;
+      downloadBtn.setAttribute("download", note.name);
+      rawBtn.href = note.download_url;
+
+      try {
+        const res = await fetch(note.download_url);
+        const text = await res.text();
+        const ext = getExt(note.name);
+
+        if (ext === "md") {
+          // markdown 渲染
+          previewBody.innerHTML = marked.parse(text);
+        } else {
+          // txt 纯文本
+          previewBody.classList.add("plain");
+          previewBody.textContent = text;
+        }
+      } catch (err) {
+        previewBody.innerHTML =
+          `<div class="hint">预览失败：<span class="pink">${err.message}</span></div>`;
+      }
+    }
+
+    // 页面加载后自动读取
+    loadNotes();
+  </script>
 </body>
 </html>
